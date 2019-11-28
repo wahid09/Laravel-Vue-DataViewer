@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+//Api Route
+
+Route::group(['namespace'=> 'Api'], function(){
+   Route::apiResource('user-profile', 'UserProfileController');
+   Route::get('search/user-profile/{field}/{query}', 'UserProfileController@SearchData');
+});
