@@ -1755,14 +1755,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      query: '',
+      queryfield: 'name',
       users: [],
       pagination: {
         current_page: 1
       }
     };
+  },
+  watch: {
+    query: function query(newq, oldq) {
+      if (newq === '') {
+        this.getData();
+      } else {
+        this.searchData();
+      }
+    }
   },
   mounted: function mounted() {
     //console.log('Component mounted.')
@@ -1782,6 +1818,21 @@ __webpack_require__.r(__webpack_exports__);
         console.log(e);
 
         _this.$Progress.fail();
+      });
+    },
+    searchData: function searchData() {
+      var _this2 = this;
+
+      this.$Progress.start();
+      axios.get("/api/search/user-profile/" + this.queryfield + "/" + this.query + "?page=" + this.pagination.current_page).then(function (response) {
+        _this2.users = response.data.data;
+        _this2.pagination = response.data.meta;
+
+        _this2.$Progress.finish();
+      })["catch"](function (e) {
+        console.log(e);
+
+        _this2.$Progress.fail();
       });
     }
   }
@@ -37268,37 +37319,150 @@ var render = function() {
             _c("div", { staticClass: "card-header" }, [_vm._v("User List")]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
+              _c("div", { staticClass: "col-md-6 mar" }, [
+                _c("div", { staticClass: "row" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.queryfield,
+                            expression: "queryfield"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "fields" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.queryfield = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "name" } }, [
+                          _vm._v("Name")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "email" } }, [
+                          _vm._v("Email")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "phone" } }, [
+                          _vm._v("Phone")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Country" } }, [
+                          _vm._v("Country")
+                        ])
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-7" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.query,
+                          expression: "query"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", placeholder: "Search" },
+                      domProps: { value: _vm.query },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.query = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
               _c(
                 "div",
                 { staticClass: "table-resposive" },
                 [
                   _c("table", { staticClass: "table table-bordered" }, [
-                    _vm._m(0),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.users, function(item, index) {
-                        return _c("tr", { key: item.id }, [
-                          _c("td", { attrs: { scope: "row" } }, [
-                            _vm._v(_vm._s(index + 1))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(item.name))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(item.email))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(item.phone))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(item.Country))]),
-                          _vm._v(" "),
-                          item.status == 1
-                            ? _c("td", [_c("span", {}, [_vm._v("Active")])])
-                            : _c("td", [_c("span", {}, [_vm._v("Inactive")])]),
-                          _vm._v(" "),
-                          _vm._m(1, true)
-                        ])
-                      }),
-                      0
+                      [
+                        _vm._l(_vm.users, function(item, index) {
+                          return _c(
+                            "tr",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.users.length,
+                                  expression: "users.length"
+                                }
+                              ],
+                              key: item.id
+                            },
+                            [
+                              _c("td", { attrs: { scope: "row" } }, [
+                                _vm._v(_vm._s(index + 1))
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.email))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.phone))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.Country))]),
+                              _vm._v(" "),
+                              item.status == 1
+                                ? _c("td", [_c("span", {}, [_vm._v("Active")])])
+                                : _c("td", [
+                                    _c("span", {}, [_vm._v("Inactive")])
+                                  ]),
+                              _vm._v(" "),
+                              _vm._m(2, true)
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "tr",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.users.length,
+                                expression: "!users.length"
+                              }
+                            ]
+                          },
+                          [_vm._m(3)]
+                        )
+                      ],
+                      2
                     )
                   ]),
                   _vm._v(" "),
@@ -37307,7 +37471,7 @@ var render = function() {
                         attrs: { pagination: _vm.pagination, offset: 5 },
                         on: {
                           paginate: function($event) {
-                            return _vm.getData()
+                            _vm.query === "" ? _vm.getData() : _vm.searchData()
                           }
                         }
                       })
@@ -37326,6 +37490,14 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c("strong", [_vm._v("Search:")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -37363,6 +37535,18 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("a", { staticClass: "btn btn-danger btn-sm", attrs: { href: "" } }, [
         _c("i", { staticClass: "fa fa-trash" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "7" } }, [
+      _c("div", { staticClass: "alert alert-danger" }, [
+        _vm._v(
+          "\n                                        Sorry! No Data Found\n                                    "
+        )
       ])
     ])
   }
