@@ -58,7 +58,7 @@
                                     <td class="text-center">
                                         <a href="" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>
                                         <a @click="edit(item)" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                        <a href="" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                        <a @click="destroy(item)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                                 <tr v-show="!users.length">
@@ -270,6 +270,49 @@
                         this.$Progress.fail()
                         console.log(e)
                     })
+            },
+            destroy(item){
+                 this.$snotify.clear();
+                  this.$snotify.confirm(
+                    "You will not be able to recover this data!",
+                    "Are you sure?",
+                    {
+                      showProgressBar: false,
+                      closeOnClick: false,
+                      pauseOnHover: true,
+                      buttons: [
+                        {
+                          text: "Yes",
+                          action: toast => {
+                            this.$snotify.remove(toast.id);
+                            this.$Progress.start();
+                            axios
+                              .delete("/api/user-profile/" + item.id)
+                              .then(response => {
+                                this.getData();
+                                this.$Progress.finish();
+                                this.$snotify.success(
+                                  "User Successfully Deleted",
+                                  "Success"
+                                );
+                              })
+                              .catch(e => {
+                                this.$Progress.fail();
+                                console.log(e);
+                              });
+                          },
+                          bold: true
+                        },
+                        {
+                          text: "No",
+                          action: toast => {
+                            this.$snotify.remove(toast.id);
+                          },
+                          bold: true
+                        }
+                      ]
+                    }
+                  );
             }
         }
     }

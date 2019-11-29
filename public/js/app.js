@@ -1974,6 +1974,43 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log(e);
       });
+    },
+    destroy: function destroy(item) {
+      var _this5 = this;
+
+      this.$snotify.clear();
+      this.$snotify.confirm("You will not be able to recover this data!", "Are you sure?", {
+        showProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        buttons: [{
+          text: "Yes",
+          action: function action(toast) {
+            _this5.$snotify.remove(toast.id);
+
+            _this5.$Progress.start();
+
+            axios["delete"]("/api/user-profile/" + item.id).then(function (response) {
+              _this5.getData();
+
+              _this5.$Progress.finish();
+
+              _this5.$snotify.success("User Successfully Deleted", "Success");
+            })["catch"](function (e) {
+              _this5.$Progress.fail();
+
+              console.log(e);
+            });
+          },
+          bold: true
+        }, {
+          text: "No",
+          action: function action(toast) {
+            _this5.$snotify.remove(toast.id);
+          },
+          bold: true
+        }]
+      });
     }
   }
 });
@@ -38651,7 +38688,18 @@ var render = function() {
                                   [_c("i", { staticClass: "fa fa-edit" })]
                                 ),
                                 _vm._v(" "),
-                                _vm._m(3, true)
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-danger btn-sm",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.destroy(item)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
                               ])
                             ]
                           )
@@ -38669,7 +38717,7 @@ var render = function() {
                               }
                             ]
                           },
-                          [_vm._m(4)]
+                          [_vm._m(3)]
                         )
                       ],
                       2
@@ -38726,7 +38774,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._m(5)
+                  _vm._m(4)
                 ]),
                 _vm._v(" "),
                 _c(
@@ -39090,16 +39138,6 @@ var staticRenderFns = [
       "a",
       { staticClass: "btn btn-info btn-sm", attrs: { href: "" } },
       [_c("i", { staticClass: "fa fa-eye" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      { staticClass: "btn btn-danger btn-sm", attrs: { href: "" } },
-      [_c("i", { staticClass: "fa fa-trash" })]
     )
   },
   function() {
