@@ -17,7 +17,7 @@ class UserProfileController extends Controller
      */
     public function index()
     {
-        return new UserProfileCollection(UserProfile::latest()->paginate(10));
+        return new UserProfileCollection(UserProfile::latest()->paginate(5));
     }
 
     /**

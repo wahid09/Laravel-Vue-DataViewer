@@ -20,6 +20,7 @@ const VueProgressBaroptions = {
 Vue.use(VueProgressBar, VueProgressBaroptions)
 
 Vue.component('user-component', require('./components/UserComponent.vue').default);
+Vue.component('pagination-component', require('./components/partials/PaginationComponent.vue').default);
 
 
 

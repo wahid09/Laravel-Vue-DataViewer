@@ -40,6 +40,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <pagination-component 
+                        v-if="pagination.last_page > 1 "
+                        :pagination = "pagination"
+                        :offset = "5"
+                        @paginate ="getData()"
+                        >                          
+                       </pagination-component>
                     </div>
                 </div>
             </div>
@@ -53,7 +60,10 @@
     export default {
         data(){
             return{
-                users: []
+                users: [],
+                pagination:{
+                    current_page: 1
+                }
             }
         },
         mounted() {
@@ -63,9 +73,10 @@
         methods:{
             getData(){
                 this.$Progress.start()
-                axios.get('/api/user-profile')
+                axios.get('/api/user-profile?page='+this.pagination.current_page)
                 .then(response =>{
                     this.users = response.data.data
+                    this.pagination = response.data.meta
                     this.$Progress.finish()
                 })
                 .catch(e =>{
